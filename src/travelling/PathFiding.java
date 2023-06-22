@@ -1,2 +1,4 @@
-package travelling;public class PathFiding {
+package travelling;
+
+public class PathFiding {
 }

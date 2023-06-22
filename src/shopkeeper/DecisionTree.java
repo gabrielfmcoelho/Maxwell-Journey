@@ -1,2 +1,4 @@
-package shopkeeper;public class DecisionTree {
+package shopkeeper;
+
+public class DecisionTree {
 }

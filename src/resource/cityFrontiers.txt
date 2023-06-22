@@ -1,0 +1,17 @@
+Principality of Kasya,Chandir Sultanate,-,-,-,-,-,-
+Chandir Sultanate,Principality of Kasya,Vunese of Empire,Ayamar League,Bun,-,-,-
+Bun,Chandir Sultanate,Ayamar League,Nargumun,-,-,-,-
+Nargumun,Bun,Ayamar League,Principality of Karhora,-,-,-,-
+Principality of Karhora,Nargumun,Ayamar League,-,-,-,-,-
+Vunese of Empire,Chandir Sultanate,Ayamar League,Kingdom of Kalb,-,-,-,-
+Ayamar League,Chandir Sultanate,Bun,Nargumun,Principality of Karhora,Vunese of Empire,Defalsia,Kingdom of Kalb
+Defalsia,Ayamar League,Kingdom of Oldcalia,-,-,-,-,-
+Kingdom of Kalb,Vunese of Empire,Ayamar League,Kingdom of Oldcalia,-,-,-,-
+Grand Ducay of Smalia,Kingdom of Oldcalia,Kingdom of Lastwatch,-,-,-,-,-
+Kingdom of Oldcalia,Defalsia,Ayamar League,Kingdom of Kalb,Grand Ducay of Smalia,Kingdom of Lastwatch,Protectorate of Dogrove,Kingdom of Legmod
+Protectorate of Dogrove,Kingdom of Oldcalia,Kingdom of Lastwatch,Principality of Gritestar,Kingdom of Legmod,-,-,-
+Kingdom of Lastwatch,Grand Ducay of Smalia,Kingdom of Oldcalia,Protectorate of Dogrove,Principality of Gritestar,-,-,-
+Principality of Gritestar,Kingdom of Lastwatch,Protectorate of Dogrove,Kingdom of Legmod,Principality of Nekikh,-,-,-
+Principality of Nekikh,Principality of Gritestar,Kingdom of Legmod,Ubud,-,-,-,-
+Kingdom of Legmod,Kingdom of Oldcalia,Protectorate of Dogrove,Principality of Gritestar,Principality of Nekikh,Ubud,-,-
+Ubud,Kingdom of Legmod,Principality of Nekikh,-,-,-,-,-

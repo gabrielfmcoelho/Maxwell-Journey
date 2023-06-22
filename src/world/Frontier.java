@@ -1,9 +1,11 @@
-public class Frontier {
-    City togo;
-    int cost;
+package world;
 
-    public Frontier(City togo, int cost){
-        this.togo = togo;
-        this.cost = cost;
+public class Frontier {
+    City destination;
+    int coinsCost;
+
+    public Frontier(City destination, int coinsCost){
+        this.destination = destination;
+        this.coinsCost = coinsCost;
     }
 }

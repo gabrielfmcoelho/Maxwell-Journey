@@ -1,0 +1,17 @@
+1,Principality of Kasya,1,5,-7
+2,Chandir Sultanate,3,8,1
+3,Bun,5,5,5
+4,Nargumun,5,3,0
+5,Principality of Karhora,7,2,-2
+6,Vunese of Empire,6,10,0
+7,Ayamar League,8,6,1
+8,Defalsia,10,4,-3
+9,Kingdom of Kalb,9,10,2
+10,Grand Ducay of Smalia,13,2,1
+11,Kingdom of Oldcalia,12,5,4
+12,Protectorate of Dogrove,14,6,3
+13,Kingdom of Lastwatch,15,4,-2
+14,Principality of Gritestar,15,8,5
+15,Principality of Nekikh,15,10,1
+16,Kingdom of Legmod,12,12,2
+17,Ubud,15,13,0

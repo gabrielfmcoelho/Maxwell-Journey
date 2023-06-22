@@ -1,2 +1,4 @@
-package travelling;public class RoutePower {
+package travelling;
+
+public class RoutePower {
 }

@@ -1,2 +1,4 @@
-package travelling;public class RouteCoins {
+package travelling;
+
+public class RouteCoins {
 }

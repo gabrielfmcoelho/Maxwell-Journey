@@ -1,2 +1,4 @@
-package shopkeeper;public class ShopkeeperManager {
+package shopkeeper;
+
+public class ShopkeeperManager {
 }
