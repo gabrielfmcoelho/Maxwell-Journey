@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import main.GamePanel;
+import entity.Player;
 import quest.Reward;
 import world.City;
 import item.Item;
@@ -19,12 +21,15 @@ import quest.Quest;
 public class CityManager {
     private HashMap<String, City> cities;
     GamePanel gp;
+    Player player;
     City cityCurrent;
     City cityLast;
     City cityDestination;
+    Scanner scanner;
 
-    public CityManager(GamePanel gp){
+    public CityManager(GamePanel gp, Player player){
         this.gp = gp;
+        this.player = player;
         this.cities = new HashMap<String, City>();
         try {
             loadCityInfo();
@@ -143,4 +148,39 @@ public class CityManager {
             g2.drawImage(city.getCity, xNewPosition, yNewPosition, gp.tileSizeScaled, gp.tileSizeScaled, null);
         }
     }
+    public boolean navigate() {
+		List<Frontier> frontiers = this.cityCurrent.frontiers;
+		Boolean foundCity = false;
+		System.out.println("Cidades vizinhas:");
+		int powerjewer = cityCurrent.getPowerInfluence();
+
+		for (Frontier fronteira : frontiers) {
+			System.out.println(fronteira.getCityDestination().code + ": " + fronteira.getCityDestination().name);
+		} 
+
+		System.out.println("\nDigite o nome do destino ou 0 para encerrar o jogo:");
+		int input = scanner.nextInt(); // lê a entrada do usuário usando o objeto scanner.
+
+		if (input == 0) {
+			System.out.println("Obrigado por jogar, até logo!");
+			return true;
+		} else {
+			for (Frontier fronteira: frontiers) {
+				if (fronteira.getCityDestination().code == input) {
+					foundCity = true;
+					this.cityCurrent = fronteira.getCityDestination();
+					// move personagem
+					player.updateJewel(powerjewer);
+					System.out.printf("\nVocê chegou em %s. \n",cityCurrent);
+					System.out.printf("\nO poder da joia agora é de %d\n", player.powerCurrent);
+					// colocar como privado o powerCurrent
+				}
+				if(!foundCity) {
+					System.out.println("Cidade inválida ou não encontrada.");
+				}
+			}					
+		} 
+		
+		return false;
+	}
 }

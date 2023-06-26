@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Player extends Entity {
     public int powerThreshold;
-    int powerCurrent;
+    public int powerCurrent;
     Quest activeQuest;
     public int coins;
     List<Item> itens;
@@ -119,5 +119,9 @@ public class Player extends Entity {
     }
     public int getPowerThreshold(){
         return powerThreshold;
+    }
+
+    public int updateJewel(int updatePower) {
+    	return powerCurrent += updatePower;
     }
 }

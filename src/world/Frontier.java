@@ -8,4 +8,11 @@ public class Frontier {
         this.destination = destination;
         this.coinsCost = coinsCost;
     }
+    public City getCityDestination() {
+    	return destination;
+    }
+    
+    public int getCoinsCost() {
+    	return coinsCost;
+    }
 }

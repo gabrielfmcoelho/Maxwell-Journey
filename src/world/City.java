@@ -46,6 +46,10 @@ public class City {
     public void addQuest(Quest quest){
         this.quest = quest;
     }
+    
+    public List<Frontier> getFrontier() {
+    	return frontiers;
+    }
 
     public void getCityImage(){
         try{
@@ -53,5 +57,8 @@ public class City {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+    public int getPowerInfluence() {
+    	return powerInfluence;
     }
 }
