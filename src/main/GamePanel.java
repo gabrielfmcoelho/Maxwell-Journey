@@ -4,6 +4,8 @@ import entity.Player;
 import world.CityManager;
 import world.Tile;
 import world.TileManager;
+import shopkeeper.ShopkeeperManager;
+
 
 import javax.swing.JPanel;
 
@@ -27,6 +29,7 @@ public class GamePanel extends JPanel implements Runnable{
     KeyHandler keyH = new KeyHandler(); // Instantiate the key handler to listen and deal with pressed keys.
     Thread gameThread; // Define a thread to be used the control the flow of the game.
     Player player = new Player(this, keyH, cityManager.getCityCurrent());
+    ShopkeeperManager shopkeepermanager = new ShopkeeperManager(player);
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight)); // Set size of the window screen.
