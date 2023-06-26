@@ -104,4 +104,20 @@ public class Player extends Entity {
     public boolean isAlive(){
         return this.powerCurrent <= this.powerThreshold;
     }
+
+    public boolean hasCoins(){
+        return this.coins <= 0;
+    }
+
+    public void updateRewards(int coinReward, int powerThresholdReward){
+        coins += coinReward;
+        powerThreshold += powerThresholdReward;
+
+    }
+    public int getCoins(){
+        return coins;
+    }
+    public int getPowerThreshold(){
+        return powerThreshold;
+    }
 }
