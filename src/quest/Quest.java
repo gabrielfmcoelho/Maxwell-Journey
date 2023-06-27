@@ -3,10 +3,10 @@ package quest;
 import world.City;
 
 public class Quest {
-    final String name;
-    final City destination;
-    final int coinsAid;
-    Reward reward;
+    public final String name;
+    public final City destination;
+    public final int coinsAid;
+    public Reward reward;
     boolean isActive;
     boolean isComplete;
 
@@ -27,6 +27,10 @@ public class Quest {
     public Reward completeQuest(){
         this.isComplete = true;
         return reward;
+    }
+
+    public boolean isNotComplete(){
+        return !this.isComplete;
     }
 
     public void abandonQuest(){

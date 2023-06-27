@@ -1,6 +1,8 @@
 package main;
 
+import UI.UI;
 import entity.Player;
+import shopkeeper.Shopkeeper;
 import world.CityManager;
 import world.Tile;
 import world.TileManager;
@@ -12,6 +14,7 @@ import javax.swing.JPanel;
 import java.awt.*;
 
 import java.lang.Thread;
+import java.util.HashMap;
 
 public class GamePanel extends JPanel implements Runnable{
     final int tileSize = 16; // Set every tile base unit as 16x16 pixels.
@@ -25,11 +28,43 @@ public class GamePanel extends JPanel implements Runnable{
     // Therefore the screen presents 4/3
 
     TileManager tileManager = new TileManager(this);
-    CityManager cityManager = new CityManager(this);
-    KeyHandler keyH = new KeyHandler(); // Instantiate the key handler to listen and deal with pressed keys.
+    public CityManager cityManager = new CityManager(this);
+    KeyHandler keyH = new KeyHandler(this); // Instantiate the key handler to listen and deal with pressed keys.
     Thread gameThread; // Define a thread to be used the control the flow of the game.
-    Player player = new Player(this, keyH, cityManager.getCityCurrent());
-    ShopkeeperManager shopkeepermanager = new ShopkeeperManager(player);
+    public Player player = new Player(this, cityManager.getCityCurrent());
+    UI ui = new UI(this);
+    public Shopkeeper shopkeeper = new Shopkeeper(ui, cityManager, player, this);
+
+
+    public int gameState; // 0 = Start, 1 = Game, 2 = Pause, 3 = Shop, 4 = End Game, 5 = Game Over.
+    public final int startState = 0;
+    public final int playerState = 1;
+    public final int pauseState = 2;
+    public final int shopkeeperState = 3;
+    public final int endState = 4;
+    public final int gameoverState = 5;
+    public final int abbandonState = 6;
+    public final int questState = 7;
+    public boolean flag = true;
+
+    public int endgameStatus = 2;
+    public HashMap<Integer, String> endgameStatusMap = new HashMap<Integer, String>(){{
+        put(0, "You have arrived at your destination\n wealthy and became the new king.");
+        put(1, "You have arrived at your destination\n and became a lord of the crown.");
+        put(2, "You have arrived at your destination\n poor and became someone's servant.");
+    }};
+    public void checkEndgameStatus(){
+        if (player.getCoins() > 10){
+            endgameStatus = 0;
+        }
+        else if (player.getCoins() <= 10 && player.getCoins() > 4){
+            endgameStatus = 1;
+        }
+        else {
+            endgameStatus = 2;
+        }
+        ui.currentDialogue = endgameStatusMap.get(endgameStatus);
+    }
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight)); // Set size of the window screen.
@@ -52,6 +87,7 @@ public class GamePanel extends JPanel implements Runnable{
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
+        gameState = 0;
 
         // Base game loop
         while(gameThread != null){ // While the gameThread is running the game will loop these flow of commands.
@@ -71,16 +107,52 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void update() {
-        player.update();
+        if (gameState == endState){
+            checkEndgameStatus();
+        }
+        else if (player.isAlive() && player.hasCoins()){
+            if (gameState == playerState){
+                player.update();
+            }
+            else if (gameState == shopkeeperState){
+                //
+            }
+        }
+        else {
+            gameState = gameoverState;
+        }
     }
 
     public void paintComponent(Graphics g){ // PaintComponent is a standard method, already existent in java do draw (or "paint") in the JPanel, and it receives Graphics class (that have many features to draw objects on screens).
         super.paintComponent(g); // Access the parent JPanel through super. and it's method paintComponent.
         Graphics2D g2 = (Graphics2D)g; // Convert the graphics object to graphics2D, which is a class that extends graphics and have more/better features to handle 2D (geometry, coordinates...).
 
-        tileManager.draw(g2);
-        cityManager.draw(g2);
-        player.draw(g2);
+        if (gameState == startState || gameState == gameoverState){
+            ui.draw(g2);
+        }
+
+        if (gameState == playerState || gameState == shopkeeperState || gameState == pauseState){
+            tileManager.draw(g2);
+            cityManager.draw(g2);
+            player.draw(g2);
+            ui.draw(g2);
+        }
+
+        if (gameState == endState || gameState == abbandonState){
+            tileManager.draw(g2);
+            ui.draw(g2);
+        }
+
+        if (gameState == questState){
+                if (flag) {
+                    String path = cityManager.pathListToString(cityManager.navigateShortestPath());
+                    ui.currentDialogue = "Você está na cidade " + cityManager.getCityCurrent().name + ".\n" +
+                            "Você deve ir para a cidade " + player.activeQuest.destination.name + ".\n" +
+                            "O caminho mais curto é: " + path + ".";
+                    flag = false;
+                }
+            ui.draw(g2);
+        }
 
         g2.dispose(); // Good practice to save memory, dispose of this graphic in context and release any system resources that is using it.
     }

@@ -5,10 +5,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.Collections;
 
 import main.GamePanel;
 import entity.Player;
@@ -21,15 +20,13 @@ import quest.Quest;
 public class CityManager {
     private HashMap<String, City> cities;
     GamePanel gp;
-    Player player;
     City cityCurrent;
     City cityLast;
     City cityDestination;
     Scanner scanner;
 
-    public CityManager(GamePanel gp, Player player){
+    public CityManager(GamePanel gp){
         this.gp = gp;
-        this.player = player;
         this.cities = new HashMap<String, City>();
         try {
             loadCityInfo();
@@ -52,11 +49,21 @@ public class CityManager {
     public void setDefaultValues(){
         this.cityCurrent = this.cities.get("Ubud");
         this.cityLast = this.cityCurrent;
-        this.cityDestination = this.cityCurrent;
+        this.cityDestination = this.cities.get(("Nargumun"));
+    }
+
+    public void activateEndGame(){
+        if (this.cityCurrent.equals(this.cityDestination)){
+            gp.gameState = gp.endState;
+        }
     }
 
     public City getCityCurrent(){
         return cityCurrent;
+    }
+
+    public void setCityCurrent(City city){
+        this.cityCurrent = city;
     }
 
     public HashMap<String, City> getCities(){
@@ -146,41 +153,65 @@ public class CityManager {
             xNewPosition = gp.tileSizeScaled * city.xPosition;
             yNewPosition = gp.tileSizeScaled * city.yPosition;
             g2.drawImage(city.getCity, xNewPosition, yNewPosition, gp.tileSizeScaled, gp.tileSizeScaled, null);
+            yNewPosition += gp.tileSizeScaled * 1.5;
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD,12F));
+            g2.setColor(Color.BLACK);
+            g2.drawString(city.name, xNewPosition, yNewPosition);
+            yNewPosition += 2;
+            xNewPosition += 2;
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD,12F));
+            g2.setColor(Color.GRAY);
+            g2.drawString(city.name, xNewPosition, yNewPosition);
         }
     }
-    public boolean navigate() {
-		List<Frontier> frontiers = this.cityCurrent.frontiers;
-		Boolean foundCity = false;
-		System.out.println("Cidades vizinhas:");
-		int powerjewer = cityCurrent.getPowerInfluence();
-
-		for (Frontier fronteira : frontiers) {
-			System.out.println(fronteira.getCityDestination().code + ": " + fronteira.getCityDestination().name);
-		} 
-
-		System.out.println("\nDigite o nome do destino ou 0 para encerrar o jogo:");
-		int input = scanner.nextInt(); // lê a entrada do usuário usando o objeto scanner.
-
-		if (input == 0) {
-			System.out.println("Obrigado por jogar, até logo!");
-			return true;
-		} else {
-			for (Frontier fronteira: frontiers) {
-				if (fronteira.getCityDestination().code == input) {
-					foundCity = true;
-					this.cityCurrent = fronteira.getCityDestination();
-					// move personagem
-					player.updateJewel(powerjewer);
-					System.out.printf("\nVocê chegou em %s. \n",cityCurrent);
-					System.out.printf("\nO poder da joia agora é de %d\n", player.powerCurrent);
-					// colocar como privado o powerCurrent
-				}
-				if(!foundCity) {
-					System.out.println("Cidade inválida ou não encontrada.");
-				}
-			}					
-		} 
-		
-		return false;
+    public void navigate(City city, int coinsCost) {
+        this.cityCurrent = city;
+        gp.player.updateStats(cityCurrent.getPowerInfluence(), coinsCost);
+        gp.player.updatePosition(city);
+        gp.player.completeQuest();
+        activateEndGame();
 	}
+
+    public List<City> navigateShortestPath() {
+        City destination = gp.player.activeQuest.destination;
+        City current = cityCurrent;
+        Queue<City> queue = new LinkedList<>();
+        boolean[] visited = new boolean[cities.size()];
+        City[] parent = new City[cities.size()];
+        queue.add(current);
+        visited[current.code-1] = true;
+        parent[current.code-1] = current;
+        while (!queue.isEmpty()) {
+            City currentNode = queue.poll();
+            if (currentNode == destination) {
+                break;
+            }
+            for (Frontier frontier : currentNode.frontiers) {
+                if (!visited[frontier.destination.code-1]) {
+                    queue.add(frontier.destination);
+                    visited[frontier.destination.code-1] = true;
+                    parent[frontier.destination.code-1] = currentNode;
+                }
+            }
+        }
+        List<City> path = new ArrayList<>();
+        City currentNode = destination;
+
+        while (currentNode != current){
+            path.add(currentNode);
+            currentNode = parent[currentNode.code-1];
+        }
+
+        Collections.reverse(path);
+
+        return path;
+    }
+
+    public String pathListToString(List<City> path) {
+        String pathString = "";
+        for (City city : path) {
+            pathString += city.name + "\n";
+        }
+        return pathString;
+    }
 }

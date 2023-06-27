@@ -4,6 +4,7 @@ import main.GamePanel;
 import main.KeyHandler;
 import quest.Quest;
 import item.Item;
+import quest.Reward;
 import world.City;
 
 import javax.imageio.ImageIO;
@@ -15,17 +16,15 @@ import java.util.List;
 public class Player extends Entity {
     public int powerThreshold;
     public int powerCurrent;
-    Quest activeQuest;
+    public static Quest activeQuest;
     public int coins;
     List<Item> itens;
 
     GamePanel gp;
-    KeyHandler keyH;
     City city;
 
-    public Player(GamePanel gp, KeyHandler keyH, City city) {
+    public Player(GamePanel gp, City city) {
         this.gp = gp;
-        this.keyH = keyH;
         this.city = city;
 
         setDefaultValues();
@@ -39,10 +38,16 @@ public class Player extends Entity {
         this.powerThreshold = 7;
         this.powerCurrent = 0;
         this.activeQuest = null;
-        this.coins = 5;
+        this.coins = 3;
     }
 
     public void setDefaultPosition(){
+        positionX = city.getxPosition() * gp.tileSizeScaled;
+        positionY = city.getyPosition() * gp.tileSizeScaled;
+    }
+
+    public void updatePosition(City city){
+        this.city = city;
         positionX = city.getxPosition() * gp.tileSizeScaled;
         positionY = city.getyPosition() * gp.tileSizeScaled;
     }
@@ -63,21 +68,21 @@ public class Player extends Entity {
     }
 
     public void update() {
-        if (keyH.isPressedDown || keyH.isPressedUp) {
-            if(keyH.isPressedUp){
-                direction = "up";
-                positionY -= movementSpeed;
-            } else if(keyH.isPressedDown){
-                direction = "down";
-                positionY += movementSpeed;
-            }
-
-            spriteCounter++;
-            if(spriteCounter > 20){
-                isSpriteOne = !isSpriteOne;
-                spriteCounter = 0;
-            }
-        }
+//        if (keyH.isPressedDown || keyH.isPressedUp) {
+//            if(keyH.isPressedUp){
+//                direction = "up";
+//                positionY -= movementSpeed;
+//            } else if(keyH.isPressedDown){
+//                direction = "down";
+//                positionY += movementSpeed;
+//            }
+//
+//            spriteCounter++;
+//            if(spriteCounter > 20){
+//                isSpriteOne = !isSpriteOne;
+//                spriteCounter = 0;
+//            }
+//        }
     }
 
     public void draw(Graphics2D g2) {
@@ -106,7 +111,7 @@ public class Player extends Entity {
     }
 
     public boolean hasCoins(){
-        return this.coins <= 0;
+        return this.coins > -1;
     }
 
     public void updateRewards(int coinReward, int powerThresholdReward){
@@ -121,7 +126,35 @@ public class Player extends Entity {
         return powerThreshold;
     }
 
-    public int updateJewel(int updatePower) {
-    	return powerCurrent += updatePower;
+    public void acceptQuest(Quest quest){
+        this.coins = this.coins + quest.coinsAid;
+        this.activeQuest = quest;
+    }
+
+    public void completeQuest(){
+        if (this.activeQuest != null && this.activeQuest.destination == this.city){
+            Reward reward = this.activeQuest.completeQuest();
+            this.coins = this.coins + reward.getCoinsReward();
+            this.powerThreshold = this.powerThreshold + reward.getItemReward().getPowerInfluence();
+            this.activeQuest = null;
+        }
+    }
+
+    public void abandonQuest(){
+        this.activeQuest.abandonQuest();
+        this.activeQuest = null;
+    }
+
+    public void updateStats(int updatePower, int updateCoins) {
+        powerCurrent += updatePower;
+        if (powerCurrent < 0) {
+            powerCurrent = 0;
+        }
+        coins -= updateCoins;
+    }
+
+    public void exchangeCoins(int coins, int powerThreshold) {
+        this.coins -= coins;
+        this.powerThreshold += powerThreshold;
     }
 }

@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 
 public class Main {
     public static void main(String[] args) {
+
         JFrame window = new JFrame(); // Instantiate JFrame object to create the game window.
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Set how to close the window, in this case: on close.
         window.setResizable(false); // The window cannot be resized.

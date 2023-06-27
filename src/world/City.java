@@ -9,7 +9,7 @@ import quest.Quest;
 
 public class City {
     int code;
-    String name;
+    public String name;
     List<Frontier> frontiers;
     Quest quest;
     int powerInfluence;
@@ -46,6 +46,9 @@ public class City {
     public void addQuest(Quest quest){
         this.quest = quest;
     }
+    public Quest getQuest(){
+        return quest;
+    }
     
     public List<Frontier> getFrontier() {
     	return frontiers;
@@ -60,5 +63,25 @@ public class City {
     }
     public int getPowerInfluence() {
     	return powerInfluence;
+    }
+
+    public City getShortestPath(City destination) {
+    	List<City> visited = new ArrayList<>();
+    	List<City> unvisited = new ArrayList<>();
+    	unvisited.add(this);
+    	while(!unvisited.isEmpty()) {
+    		City current = unvisited.get(0);
+    		for(Frontier f : current.getFrontier()) {
+    			if(f.destination == destination) {
+    				return current;
+    			}
+    			if(!visited.contains(f.destination)) {
+    				unvisited.add(f.destination);
+    			}
+    		}
+    		visited.add(current);
+    		unvisited.remove(current);
+    	}
+    	return null;
     }
 }
