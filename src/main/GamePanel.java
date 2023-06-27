@@ -4,9 +4,7 @@ import UI.UI;
 import entity.Player;
 import shopkeeper.Shopkeeper;
 import world.CityManager;
-import world.Tile;
 import world.TileManager;
-import shopkeeper.ShopkeeperManager;
 
 
 import javax.swing.JPanel;
